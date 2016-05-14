@@ -21,23 +21,18 @@
 
 <h2>Test read-only ReST APIs</h2>
 
-
 <div id="app">
     {{ message }}
-<a href="#"
-  class="btn btn-success"
-  @click.stop="loadBrands">Load Brands</a>
 <ul>
   <li v-for="brand in brands">
-    {{ brand.id }} - {{ brand.name }}
+    {{ brand.fields.code }} - <a href="https://raceresults.reportlab.com/api/shoe/?brand={{ brand.pk }}">{{ brand.fields.name }}</a>
   </li>
 </ul>
 </div>
 
 
 <h2>Serve an image out of IMGIX</h2>
-<p>if you see nothing, or see their faces, we have a problem:</p>
-<img alt="2 guys jumping" src="https://shoeguide.imgix.net/articles/2guysJumping.jpg?w=900&h=300&fit=crop&crop=entropy"/>
+<img alt="2 guys jumping" src="https://shoeguide.imgix.net/articles/2guysJumping.jpg?w=150&h=100&fit=crop&mask=ellipse"/>
 
 
 
@@ -46,17 +41,21 @@
 new Vue({
     el: '#app',
     data: {
-        message: 'Hello Vue.js!',
+        message: 'About to fetching from server',
         brands:[]
     },
+    ready: function(){
+        this.loadBrands();
+    },    
     methods: {
         loadBrands: function() {
-            this.$http.get('http://jsonplaceholder.typicode.com/users', function(data, status, request){
+            this.$http.get('https://raceresults.reportlab.com/api/brand/', function(data, status, request){
                 if(status == 200)
                 {
                     this.brands = data;
                 }
             });
+            this.message = "Look what we just fetched from the back end...";
         }        
     }
 })
